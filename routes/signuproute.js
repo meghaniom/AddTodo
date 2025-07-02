@@ -7,8 +7,4 @@ const signup = require('../controller/Userdata');
 
  router.post('./user/login',signup.login);
 
-//  router.post('/user/signup', signup);
-
-//  router.post('/user/login',signup);
-
   module.exports = router;
