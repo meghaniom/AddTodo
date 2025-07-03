@@ -5,13 +5,16 @@ const PORT = 4000;
 
 const todoList = require('./routes/Todoroutes');
 const signupData = require('./routes/signuproute');
-
+const addtodoData = require('./routes/todoCollect') ;
 
 app.use(express.json());
 
 
 app.use('/api/v1/todo', todoList);
 app.use('/api/v1/auth', signupData);
+
+app.use('/api/v1/collect',addtodoData);
+app.use('/api/v1/tododss')
 
 
 dbConnect()

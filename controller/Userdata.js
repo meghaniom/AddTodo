@@ -1,5 +1,6 @@
 const Signup = require("../model/Signupmodel");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 exports.register = async (req, res) => {
   const { username, email, password, mobile } = req.body;
 
@@ -35,20 +36,24 @@ exports.login = async (req, res) => {
     const user = await Signup.findOne({ email });
     if (!user) {
       return res.status(400).json({
-        message: "User  not found .Please register first.",
+        message: "User not found. Please register first.",
       });
     }
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
 
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
       return res.status(400).json({
         message: "Invalid email or password.",
       });
     }
+
+    const token = jwt.sign({ id: user._id }, "ommeghani", { expiresIn: "1h" });
+
     res.status(200).json({
       message: "Login Successfully.",
-      
+      token: token,
     });
+
   } catch (error) {
     console.log("Login error:", error);
     res.status(500).json({
@@ -56,3 +61,32 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+
+exports.verify = async (req, res) => {
+  try {
+    const decoded = jwt.verify(req.body.token, "ommeghani");
+
+    
+    await res.status(200).json({
+      message: "Token verified",
+      userId: decoded.id,  
+    });
+
+  } catch (error) {
+    console.log("verify error:", error);
+
+     if (error.name === "TokenExpiredError") {
+      return res.status(401).json({
+        message: "Token expired. Please log in again.",
+      });
+    }
+
+    
+
+    return res.status(401).json({
+      message: "Invalid Token",
+    });
+  }
+};
+
