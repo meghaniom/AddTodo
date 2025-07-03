@@ -37,3 +37,26 @@ exports.updateTodoCollect = async (req, res) => {
       .json({ message: "Failed to update Todo", error: error.message });
   }
 };
+
+ exports.readTodoCollect = async(req, res) => {
+    try {
+        const readData = await TodoCollect.find();
+         res.status(200).json({message : "Todo successfullu read", readData})
+    }
+    catch (error) {
+       res.status(500).json({message : "Todo not found", error : error.message})
+    }
+ }
+
+  exports.deleteTodoCollect = async(req, res) => {
+    try {
+        const deleteData = await TodoCollect.findByIdAndDelete(req.params.id);
+         if (!deleteData) {
+            return res.status(400).json({ message : "Todo not found"});
+         }
+          return res.status(200).json({message : "Todo deleted Successfully"});
+    }
+    catch(error) {
+         res.status(500).json({message : "Todo not found", error : error.message})
+    }
+  }

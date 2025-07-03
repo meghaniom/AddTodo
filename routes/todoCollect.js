@@ -5,7 +5,9 @@ const todoCollect = require('../controller/todoCollect');
 
 
  router.post('/addto',todoCollect.addTodoCollect);
- router.post("/:id", todoCollect.updateTodoCollect)
+ router.patch("/:id", todoCollect.updateTodoCollect);
+ router.get("/",todoCollect.readTodoCollect);
+ router.delete("/:id",todoCollect.deleteTodoCollect);
 
 
   module.exports = router;
